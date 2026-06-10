@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop, 'feature/**']
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Set up Maven
+        uses: s4u/setup-maven-action@v1.18.0
+        with:
+          java-version: 17
+          maven-version: 3.9.9
+
+      - name: Run tests (CI profile, UI and performance benchmarks excluded)
+        run: mvn -B -ntp test -Pci

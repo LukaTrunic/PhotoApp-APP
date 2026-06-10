@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>User Actions</title>
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background: #f5f7fa;
+        margin: 0;
+    }
+
+    .container {
+        max-width: 1400px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    table {
+        width: 100%;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    th,
+    td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        font-size: 13px;
+    }
+
+    th {
+        background: #f8f9ff;
+        font-weight: 600;
+    }
+
+</style>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+<div class="container">
+<h1>📋 User Actions Log</h1>
+<table>
+<tr><th>Time</th><th>Username</th><th>Action</th><th>Details</th><th>IP</th></tr>
+<tr th:each="action:${actions}">
+<td th:text="${#temporals.format(action.timestamp,'dd/MM/yyyy HH:mm:ss')}">-</td>
+<td th:text="${action.username}">-</td>
+<td th:text="${action.action}">-</td>
+<td th:text="${action.details}">-</td>
+<td th:text="${action.ipAddress}">-</td>
+</tr>
+</table>
+</div>
+</body>
+</html>

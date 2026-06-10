@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - PhotoApp</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .register-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .register-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .register-header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .register-header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .register-body {
+            padding: 40px 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .package-selector {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .package-option {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .package-option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .package-option input[type="radio"] {
+            display: none;
+        }
+
+        .package-option input[type="radio"]:checked + label {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .package-option input[type="radio"]:checked ~ .package-details {
+            color: #667eea;
+        }
+
+        .package-label {
+            font-weight: 600;
+            font-size: 18px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .package-details {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-error {
+            background: #fee;
+            color: #c33;
+            border: 1px solid #fcc;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .login-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .package-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .package-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .package-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .package-card.selected {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .package-card input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .package-name {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .package-info {
+            font-size: 11px;
+            color: #666;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+<div class="register-container">
+    <div class="register-header">
+        <h1>📸 PhotoApp</h1>
+        <p>Create your account and start sharing photos</p>
+    </div>
+
+    <div class="register-body">
+        <!-- Error Messages -->
+        <div th:if="${error}" class="alert alert-error">
+            <span th:text="${error}">Error message</span>
+        </div>
+
+        <!-- Registration Form -->
+        <form action="/register" method="post">
+            <div class="form-group">
+                <label for="username">Username *</label>
+                <input type="text" id="username" name="username" required 
+                       placeholder="Choose a username" minlength="3">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" required 
+                       placeholder="your.email@example.com">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password *</label>
+                <input type="password" id="password" name="password" required 
+                       placeholder="At least 6 characters" minlength="6">
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password *</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required 
+                       placeholder="Re-enter your password">
+            </div>
+
+            <div class="form-group">
+                <label>Choose Your Package *</label>
+                <div class="package-grid">
+                    <div class="package-card" onclick="selectPackage('FREE')">
+                        <input type="radio" id="free" name="packageType" value="FREE" checked>
+                        <div class="package-name">🆓 FREE</div>
+                        <div class="package-info">
+                            • 2MB max file<br>
+                            • 5 uploads/day
+                        </div>
+                    </div>
+                    
+                    <div class="package-card" onclick="selectPackage('PRO')">
+                        <input type="radio" id="pro" name="packageType" value="PRO">
+                        <div class="package-name">⭐ PRO</div>
+                        <div class="package-info">
+                            • 5MB max file<br>
+                            • 20 uploads/day
+                        </div>
+                    </div>
+                    
+                    <div class="package-card" onclick="selectPackage('GOLD')">
+                        <input type="radio" id="gold" name="packageType" value="GOLD">
+                        <div class="package-name">💎 GOLD</div>
+                        <div class="package-info">
+                            • Unlimited size<br>
+                            • Unlimited uploads
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Create Account</button>
+        </form>
+
+        <!-- Login Link -->
+        <div class="login-link">
+            Already have an account? <a href="/login">Login here</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function selectPackage(pkg) {
+        // Remove selected class from all cards
+        document.querySelectorAll('.package-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+        
+        // Add selected class to clicked card
+        event.currentTarget.classList.add('selected');
+        
+        // Check the radio button
+        document.getElementById(pkg.toLowerCase()).checked = true;
+    }
+    
+    // Set initial selected state
+    document.querySelector('.package-card').classList.add('selected');
+    
+    // Password validation
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        
+        if (password !== confirmPassword) {
+            e.preventDefault();
+            alert('Passwords do not match!');
+        }
+    });
+</script>
+
+</body>
+</html>

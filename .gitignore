@@ -1,0 +1,31 @@
+# Local study notes (not pushed to GitHub)
+docs/
+
+# Build
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs and local data
+*.log
+data/
+uploads/
+
+# Secrets (never commit Firebase credentials)
+src/main/resources/firebase-service-account.json
+
+# Test artifacts
+test-output/
+.selenium/

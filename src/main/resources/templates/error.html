@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Error</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            padding: 40px;
+        }
+
+        .box {
+            background: white;
+            padding: 30px;
+            max-width: 500px;
+            margin: auto;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        h1 {
+            color: #f44336;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #2196f3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box">
+
+    <h1>🚫 Something went wrong</h1>
+
+    <!-- STATUS CODE -->
+    <p th:if="${status}">
+        <b>Error code:</b> <span th:text="${status}"></span>
+    </p>
+
+    <!-- 403 -->
+    <p th:if="${status == 403}">
+        You don’t have permission to access this page.
+    </p>
+
+    <!-- 404 -->
+    <p th:if="${status == 404}">
+        The page you’re looking for does not exist.
+    </p>
+
+    <!-- 500 -->
+    <p th:if="${status == 500}">
+        An internal server error occurred.
+        Please try again later.
+    </p>
+
+    <!-- CUSTOM MESSAGE -->
+    <p th:if="${message}">
+        <i th:text="${message}"></i>
+    </p>
+
+    <a href="/">⬅ Back to Home</a>
+
+</div>
+
+</body>
+</html>

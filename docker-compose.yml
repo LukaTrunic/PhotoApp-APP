@@ -1,0 +1,21 @@
+services:
+  photoapp:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - photoapp-data:/app/data
+      - photoapp-uploads:/app/uploads
+
+  prometheus:
+    image: prom/prometheus:v2.51.0
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      - photoapp
+
+volumes:
+  photoapp-data:
+  photoapp-uploads:

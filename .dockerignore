@@ -1,0 +1,12 @@
+# Build output and IDE
+target/
+.idea/
+*.iml
+.vscode/
+
+# Local runtime data (mounted as volumes in Docker)
+data/
+uploads/
+
+# Git
+.git/
